@@ -1,10 +1,9 @@
+import { useState } from 'react';
 import { Box, VStack, HStack, Heading, Text, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, IconButton, useToast, Card, CardHeader, CardBody } from '@chakra-ui/react';
 import { EmailIcon, DeleteIcon, CopyIcon } from '@chakra-ui/icons';
 
 const AdminPanel = () => {
   const toast = useToast();
-
-  // Dados mockados de convites (apenas para demonstração)
   const [invites, setInvites] = useState([
     { id: 1, email: 'maria.silva@empresa.com', status: 'Enviado', date: '2024-01-15' },
     { id: 2, email: 'joao.santos@empresa.com', status: 'Pendente', date: '2024-01-16' },
