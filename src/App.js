@@ -6,12 +6,13 @@ import CreatePost from './components/CreatePost';
 import Post from './components/Post';
 import Login from './components/Login';
 import AdminPanel from './components/AdminPanel';
+import Profile from './components/Profile';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentView, setCurrentView] = useState('feed');
 
-  // Dados mockados (agora dentro do componente App)
+  // Dados mockados
   const mockPosts = [
     {
       author: 'Maria Silva',
@@ -52,14 +53,29 @@ function App() {
     { name: "Carlos", role: "Gerente", status: "offline", lastSeen: "1 h" }
   ];
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setCurrentView('feed');
+  };
+
+  const handleViewChange = (view) => {
+    setCurrentView(view);
+  };
+
+  // Se não estiver logado, mostra a tela de login
   if (!isLoggedIn) {
     return <Login onLogin={() => setIsLoggedIn(true)} />;
   }
 
+  // Função renderContent
   const renderContent = () => {
     switch (currentView) {
       case 'admin':
         return <AdminPanel />;
+      
+      case 'profile':
+        return <Profile />;
+      
       case 'feed':
       default:
         return (
@@ -153,7 +169,10 @@ function App() {
 
   return (
     <Box bg="gray.100" minH="100vh">
-      <Navbar onViewChange={setCurrentView} currentView={currentView} />
+      <Navbar 
+        onViewChange={handleViewChange}
+        onLogout={handleLogout}
+      />
       {renderContent()}
     </Box>
   );
