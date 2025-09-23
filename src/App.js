@@ -41,12 +41,12 @@ function App() {
   ];
 
   const contacts = [
-    { name: "Monique Gonsaga", role: "RH", status: "online", lastSeen: "Agora" },
+    { name: "Monique Gonsaga", role: "Gerente de RH", status: "online", lastSeen: "Agora" },
     { name: "Keren Vignon", role: "Aniversariante", status: "online", lastSeen: "13:52" },
     { name: "Luana Spanguero", role: "Colaboradora", status: "offline", lastSeen: "19 de Set" },
     { name: "Beatriz Iara", role: "Colaboradora", status: "online", lastSeen: "19 de Set" },
-    { name: "Marcia Azevedo", role: "Colaboradora", status: "offline", lastSeen: "17 de Set" },
-    { name: "Nicoly", role: "Colaboradora", status: "online", lastSeen: "12 de Set" },
+    { name: "Marcia Azevedo", role: "Gerente Financeiro", status: "offline", lastSeen: "17 de Set" },
+    { name: "Nicoly", role: "Auxiliar de RH", status: "online", lastSeen: "12 de Set" },
     { name: "Regiane Silva", role: "Colaboradora", status: "online", lastSeen: "12 de Set" },
     { name: "Lucas", role: "Desenvolvedor", status: "online", lastSeen: "2 min" },
     { name: "Fernanda", role: "Designer", status: "online", lastSeen: "5 min" },
