@@ -1,7 +1,8 @@
 import { Box, Flex, VStack } from '@chakra-ui/react';
 import Post from './Post';
 import CreatePost from './CreatePost';
-import ContactList from './ContactList';
+import ContactList from './ContactsList';
+
 // Dados falsos para a apresentação
 const DUMMY_POSTS = [
   {

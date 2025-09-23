@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import {
   Box, VStack, HStack, Text, Avatar, Input,
-  Badge, Divider, Flex, useColorModeValue
+  Badge, Flex, useColorModeValue
 } from '@chakra-ui/react';
 
-// Dados dos contatos
+// Dados dos contatos (usando os nomes que você forneceu)
 const CONTACTS_DATA = [
   {
     id: 1,
@@ -60,7 +60,6 @@ const ContactList = ({ onContactClick }) => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
   
   const filteredContacts = CONTACTS_DATA.filter(contact =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -73,36 +72,30 @@ const ContactList = ({ onContactClick }) => {
   return (
     <Box 
       w="100%" 
-      maxW="400px" 
       bg={bgColor} 
-      borderRight="1px solid" 
-      borderColor={borderColor}
-      h="100vh"
-      overflowY="auto"
+      borderRadius="lg"
+      p={4}
+      boxShadow="md"
     >
-      {/* Header */}
-      <Box p={4} borderBottom="1px solid" borderColor={borderColor}>
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
-          Contatos da Empresa
-        </Text>
-        <Input
-          placeholder="Buscar contatos..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          borderRadius="full"
-        />
-      </Box>
+      <Text fontSize="xl" fontWeight="bold" mb={4}>
+        Contatos da Empresa
+      </Text>
+      
+      <Input
+        placeholder="Buscar contatos..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        borderRadius="full"
+        mb={4}
+      />
 
-      {/* Lista de Contatos */}
-      <VStack spacing={0} align="stretch">
-        {/* Online */}
+      <VStack spacing={2} align="stretch">
+        {/* Contatos Online */}
         {onlineContacts.length > 0 && (
           <>
-            <Box px={4} py={2} bg="green.50">
-              <Text fontSize="sm" fontWeight="medium" color="green.600">
-                ONLINE • {onlineContacts.length} contatos
-              </Text>
-            </Box>
+            <Text fontSize="sm" fontWeight="medium" color="green.600" px={2}>
+              ONLINE • {onlineContacts.length}
+            </Text>
             {onlineContacts.map(contact => (
               <ContactItem 
                 key={contact.id} 
@@ -113,14 +106,12 @@ const ContactList = ({ onContactClick }) => {
           </>
         )}
 
-        {/* Offline */}
+        {/* Contatos Offline */}
         {offlineContacts.length > 0 && (
           <>
-            <Box px={4} py={2} bg="gray.100">
-              <Text fontSize="sm" fontWeight="medium" color="gray.600">
-                OFFLINE • {offlineContacts.length} contatos
-              </Text>
-            </Box>
+            <Text fontSize="sm" fontWeight="medium" color="gray.600" px={2} mt={4}>
+              OFFLINE • {offlineContacts.length}
+            </Text>
             {offlineContacts.map(contact => (
               <ContactItem 
                 key={contact.id} 
@@ -139,31 +130,32 @@ const ContactList = ({ onContactClick }) => {
 const ContactItem = ({ contact, onClick }) => {
   return (
     <Flex
-      p={4}
+      p={3}
+      borderRadius="md"
       _hover={{ bg: 'gray.50', cursor: 'pointer' }}
       onClick={onClick}
       align="center"
       gap={3}
     >
       <Avatar 
-        size="md" 
+        size="sm" 
         name={contact.name} 
         src={contact.avatar}
         border={contact.status === 'online' ? '2px solid' : 'none'}
-        borderColor={contact.status === 'online' ? 'green.500' : 'transparent'}
+        borderColor="green.500"
       />
       <Box flex={1}>
-        <Text fontWeight="medium">{contact.name}</Text>
-        <Text fontSize="sm" color="gray.600" noOfLines={1}>
+        <Text fontWeight="medium" fontSize="sm">{contact.name}</Text>
+        <Text fontSize="xs" color="gray.600" noOfLines={1}>
           {contact.role}
         </Text>
       </Box>
       <VStack spacing={0} align="flex-end">
         <Badge 
           colorScheme={contact.status === 'online' ? 'green' : 'gray'} 
-          size="sm"
+          size="xs"
         >
-          {contact.status === 'online' ? 'ONLINE' : 'OFFLINE'}
+          {contact.status}
         </Badge>
         <Text fontSize="xs" color="gray.500">
           {contact.lastSeen}
