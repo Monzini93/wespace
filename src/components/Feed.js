@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { Button, Box, VStack } from '@chakra-ui/react';
-import { ChatWindow } from './chat';
+import { Box, Flex, VStack } from '@chakra-ui/react';
 import Post from './Post';
 import CreatePost from './CreatePost';
+import ContactList from './ContactsList';
 
 // Dados falsos para a apresentação
 const DUMMY_POSTS = [
@@ -35,56 +34,29 @@ const DUMMY_POSTS = [
   },
 ];
 
-const Feed = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
+const Feed = ({ onContactClick }) => {
   return (
-    <Box position="relative" minH="100vh">
-      {/* Overlay quando chat aberto */}
-      {isChatOpen && (
-        <Box
-          position="fixed"
-          top={0}
-          left={0}
-          w="100vw"
-          h="100vh"
-          bg="blackAlpha.600"
-          zIndex={999}
-          onClick={() => setIsChatOpen(false)}
-        />
-      )}
-
-      {/* Conteúdo principal do Feed */}
-      <Box opacity={isChatOpen ? 0.3 : 1} transition="opacity 0.2s">
-        <VStack spacing={6} p={4}>
+    <Flex gap={8} align="start" p={4}>
+      {/* Coluna principal do feed */}
+      <Box flex="3">
+        <VStack spacing={6}>
           <CreatePost />
           {DUMMY_POSTS.map((post) => (
             <Post key={post.id} postData={post} />
           ))}
         </VStack>
-
-        {/* Botão flutuante para abrir chat */}
-        <Button 
-          colorScheme="purple" 
-          onClick={() => setIsChatOpen(true)}
-          position="fixed"
-          bottom="4"
-          right="4"
-          zIndex={800}
-          size="lg"
-          borderRadius="full"
-          boxShadow="lg"
-        >
-          💬 Chat
-        </Button>
       </Box>
 
-      {/* Janela do Chat */}
-      <ChatWindow
-        isOpen={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-      />
-    </Box>
+      {/* Barra lateral com contatos */}
+      <Box
+        flex="1"
+        display={{ base: 'none', lg: 'block' }}
+        position="sticky"
+        top="100px"
+      >
+        <ContactList onContactClick={onContactClick} />
+      </Box>
+    </Flex>
   );
 };
 

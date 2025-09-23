@@ -4,45 +4,11 @@ import {
   IconButton, Flex, Badge, InputGroup, InputRightElement,
   useColorModeValue
 } from '@chakra-ui/react';
-import { ArrowBackIcon, AttachmentIcon, PhoneIcon, VideoIcon } from '@chakra-ui/icons';
-import { FiSend, FiSmile } from 'react-icons/fi';
+import { ArrowBackIcon, AttachmentIcon, PhoneIcon } from '@chakra-ui/icons';
+import { FiSend, FiSmile, FiVideo } from 'react-icons/fi';
 
-const mockConversation = {
-  contact: {
-    id: 1,
-    name: 'Monique Gonçalves',
-    role: 'Gerente de RH',
-    department: 'Recursos Humanos',
-    status: 'online',
-    avatar: 'https://i.pravatar.cc/150?u=monique'
-  },
-  messages: [
-    {
-      id: 1,
-      sender: 'monique',
-      text: 'Olá! Vi que você finalizou o relatório trimestral. Podemos marcar uma reunião para discutir os resultados?',
-      time: '10:30',
-      date: 'Hoje'
-    },
-    {
-      id: 2,
-      sender: 'user',
-      text: 'Bom dia, Monique! Claro, estou com a agenda livre na quarta-feira pela manhã. Que tal 9h?',
-      time: '10:32',
-      date: 'Hoje'
-    },
-    {
-      id: 3,
-      sender: 'monique',
-      text: 'Perfeito! 9h da quarta-feira funciona bem. Vou enviar o convite pela agenda.',
-      time: '10:33',
-      date: 'Hoje'
-    }
-  ]
-};
-
-const ChatWindow = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState(mockConversation.messages);
+const ChatWindow = ({ isOpen, onClose, contact }) => {
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -56,6 +22,21 @@ const ChatWindow = ({ isOpen, onClose }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Quando muda o contato, inicia a conversa com mensagem simulada
+  useEffect(() => {
+    if (contact) {
+      setMessages([
+        {
+          id: 1,
+          sender: 'contact',
+          text: `Olá, eu sou ${contact.name}. Vamos conversar?`,
+          time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+          date: 'Hoje'
+        }
+      ]);
+    }
+  }, [contact]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return;
@@ -79,7 +60,7 @@ const ChatWindow = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !contact) return null;
 
   return (
     <Box
@@ -97,6 +78,7 @@ const ChatWindow = ({ isOpen, onClose }) => {
       border="1px solid"
       borderColor={borderColor}
     >
+      {/* Header */}
       <Flex
         p={4}
         borderBottom="1px solid"
@@ -115,19 +97,19 @@ const ChatWindow = ({ isOpen, onClose }) => {
           />
           <Avatar
             size="md"
-            name={mockConversation.contact.name}
-            src={mockConversation.contact.avatar}
+            name={contact.name}
+            src={contact.avatar || `https://i.pravatar.cc/150?u=${contact.name}`}
           />
           <Box>
             <Text fontWeight="bold" fontSize="lg">
-              {mockConversation.contact.name}
+              {contact.name}
             </Text>
             <HStack spacing={2}>
-              <Badge colorScheme="green" size="sm">
-                {mockConversation.contact.status}
+              <Badge colorScheme={contact.status === 'online' ? 'green' : 'gray'} size="sm">
+                {contact.status}
               </Badge>
               <Text fontSize="sm" color="gray.600">
-                {mockConversation.contact.role}
+                {contact.role}
               </Text>
             </HStack>
           </Box>
@@ -141,7 +123,7 @@ const ChatWindow = ({ isOpen, onClose }) => {
             aria-label="Chamada de voz"
           />
           <IconButton
-            icon={<VideoIcon />}
+            icon={<FiVideo />}
             variant="ghost"
             colorScheme="purple"
             aria-label="Videochamada"
@@ -149,6 +131,7 @@ const ChatWindow = ({ isOpen, onClose }) => {
         </HStack>
       </Flex>
 
+      {/* Mensagens */}
       <Box h="calc(100% - 140px)" overflowY="auto" p={4}>
         <VStack spacing={4} align="stretch">
           {messages.map((message) => (
@@ -182,6 +165,7 @@ const ChatWindow = ({ isOpen, onClose }) => {
         </VStack>
       </Box>
 
+      {/* Input */}
       <Box p={4} borderTop="1px solid" borderColor={borderColor}>
         <HStack spacing={2}>
           <IconButton
