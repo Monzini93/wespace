@@ -1,67 +1,176 @@
-import { Box, VStack, HStack, Avatar, Text, Badge, Flex } from '@chakra-ui/react';
+import { useState } from 'react';
+import {
+  Box, VStack, HStack, Text, Avatar, Input,
+  Badge, Divider, Flex, useColorModeValue
+} from '@chakra-ui/react';
 
-const ContactsList = () => {
-  // Dados de exemplo dos contatos
-  const contacts = [
-    { name: "Lucas", role: "Desenvolvedor", status: "online", lastSeen: "2 min" },
-    { name: "Fernanda", role: "Designer", status: "online", lastSeen: "5 min" },
-    { name: "Carlos", role: "Gerente", status: "offline", lastSeen: "1 h" },
-    { name: "Monique Gonsaga", role: "RH", status: "online", lastSeen: "Agora" },
-    { name: "Keren Vignon", role: "Aniversariante", status: "online", lastSeen: "13:52" },
-    { name: "Luana Spanguero", role: "Colaboradora", status: "offline", lastSeen: "19 de Set" },
-    { name: "Beatriz Iara", role: "Colaboradora", status: "online", lastSeen: "19 de Set" },
-    { name: "Marcia Azevedo", role: "Colaboradora", status: "offline", lastSeen: "17 de Set" },
-    { name: "Nicoly", role: "Colaboradora", status: "online", lastSeen: "12 de Set" },
-    { name: "Regiane Silva", role: "Colaboradora", status: "online", lastSeen: "12 de Set" }
-  ];
+// Dados dos contatos
+const CONTACTS_DATA = [
+  {
+    id: 1,
+    name: 'Monique Gonsaga',
+    role: 'Gerente de RH',
+    status: 'online',
+    lastSeen: 'Agora',
+    avatar: 'https://i.pravatar.cc/150?u=monique'
+  },
+  {
+    id: 2,
+    name: 'Keren Vignon',
+    role: 'Analista de Marketing Tocailvros & Tocacast',
+    status: 'online',
+    lastSeen: '13:52',
+    avatar: 'https://i.pravatar.cc/150?u=keren'
+  },
+  {
+    id: 3,
+    name: 'Luana Spanguero',
+    role: 'Colaboradora',
+    status: 'offline',
+    lastSeen: '19 de Set',
+    avatar: 'https://i.pravatar.cc/150?u=luana'
+  },
+  {
+    id: 4,
+    name: 'Beatriz Lara',
+    role: 'Head of Marketing',
+    status: 'online',
+    lastSeen: '19 de Set',
+    avatar: 'https://i.pravatar.cc/150?u=beatriz'
+  },
+  {
+    id: 5,
+    name: 'Marcia Azevedo',
+    role: 'Gerente Financeiro',
+    status: 'offline',
+    lastSeen: '17 de Set',
+    avatar: 'https://i.pravatar.cc/150?u=marcia'
+  },
+  {
+    id: 6,
+    name: 'Nicoly',
+    role: 'Auxiliar de RH',
+    status: 'online',
+    lastSeen: '12 de Set',
+    avatar: 'https://i.pravatar.cc/150?u=nicoly'
+  }
+];
+
+const ContactList = ({ onContactClick }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const bgColor = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  
+  const filteredContacts = CONTACTS_DATA.filter(contact =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const onlineContacts = filteredContacts.filter(contact => contact.status === 'online');
+  const offlineContacts = filteredContacts.filter(contact => contact.status === 'offline');
 
   return (
-    <Box bg="white" borderRadius="lg" boxShadow="sm" p={4} w="100%">
-      <Text fontWeight="bold" fontSize="lg" mb={4} color="gray.700">
-        👥 Contatos da Empresa
-      </Text>
-      
-      <VStack spacing={3} align="stretch" maxH="400px" overflowY="auto">
-        {contacts.map((contact, index) => (
-          <HStack 
-            key={index} 
-            p={2} 
-            borderRadius="md" 
-            _hover={{ bg: "gray.50" }}
-            cursor="pointer"
-            spacing={3}
-          >
-            <Avatar 
-              name={contact.name} 
-              size="sm" 
-              src={`https://i.pravatar.cc/150?u=${contact.name}`}
-            />
-            
-            <Flex direction="column" flex={1}>
-              <Text fontWeight="medium" fontSize="sm">
-                {contact.name}
+    <Box 
+      w="100%" 
+      maxW="400px" 
+      bg={bgColor} 
+      borderRight="1px solid" 
+      borderColor={borderColor}
+      h="100vh"
+      overflowY="auto"
+    >
+      {/* Header */}
+      <Box p={4} borderBottom="1px solid" borderColor={borderColor}>
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          Contatos da Empresa
+        </Text>
+        <Input
+          placeholder="Buscar contatos..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          borderRadius="full"
+        />
+      </Box>
+
+      {/* Lista de Contatos */}
+      <VStack spacing={0} align="stretch">
+        {/* Online */}
+        {onlineContacts.length > 0 && (
+          <>
+            <Box px={4} py={2} bg="green.50">
+              <Text fontSize="sm" fontWeight="medium" color="green.600">
+                ONLINE • {onlineContacts.length} contatos
               </Text>
-              <Text fontSize="xs" color="gray.500">
-                {contact.role}
+            </Box>
+            {onlineContacts.map(contact => (
+              <ContactItem 
+                key={contact.id} 
+                contact={contact} 
+                onClick={() => onContactClick(contact)}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Offline */}
+        {offlineContacts.length > 0 && (
+          <>
+            <Box px={4} py={2} bg="gray.100">
+              <Text fontSize="sm" fontWeight="medium" color="gray.600">
+                OFFLINE • {offlineContacts.length} contatos
               </Text>
-            </Flex>
-            
-            <Flex direction="column" align="flex-end">
-              <Badge 
-                colorScheme={contact.status === "online" ? "green" : "gray"} 
-                fontSize="xs"
-              >
-                {contact.status === "online" ? "● Online" : "○ Offline"}
-              </Badge>
-              <Text fontSize="xs" color="gray.400" mt={1}>
-                {contact.lastSeen}
-              </Text>
-            </Flex>
-          </HStack>
-        ))}
+            </Box>
+            {offlineContacts.map(contact => (
+              <ContactItem 
+                key={contact.id} 
+                contact={contact} 
+                onClick={() => onContactClick(contact)}
+              />
+            ))}
+          </>
+        )}
       </VStack>
     </Box>
   );
 };
 
-export default ContactsList;
+// Componente individual do contato
+const ContactItem = ({ contact, onClick }) => {
+  return (
+    <Flex
+      p={4}
+      _hover={{ bg: 'gray.50', cursor: 'pointer' }}
+      onClick={onClick}
+      align="center"
+      gap={3}
+    >
+      <Avatar 
+        size="md" 
+        name={contact.name} 
+        src={contact.avatar}
+        border={contact.status === 'online' ? '2px solid' : 'none'}
+        borderColor={contact.status === 'online' ? 'green.500' : 'transparent'}
+      />
+      <Box flex={1}>
+        <Text fontWeight="medium">{contact.name}</Text>
+        <Text fontSize="sm" color="gray.600" noOfLines={1}>
+          {contact.role}
+        </Text>
+      </Box>
+      <VStack spacing={0} align="flex-end">
+        <Badge 
+          colorScheme={contact.status === 'online' ? 'green' : 'gray'} 
+          size="sm"
+        >
+          {contact.status === 'online' ? 'ONLINE' : 'OFFLINE'}
+        </Badge>
+        <Text fontSize="xs" color="gray.500">
+          {contact.lastSeen}
+        </Text>
+      </VStack>
+    </Flex>
+  );
+};
+
+export default ContactList;
